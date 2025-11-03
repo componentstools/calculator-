@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор импорта из Европы</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #366092 0%, #4a7bb0 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #366092;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #366092;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 6px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #366092;
+            box-shadow: 0 0 0 3px rgba(54, 96, 146, 0.1);
+        }
+
+        .input-hint {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 4px;
+        }
+
+        .result-section {
+            background: linear-gradient(135deg, #00b050 0%, #00d460 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,176,80,0.3);
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .result-value {
+            font-size: 42px;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .result-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #366092 0%, #4a7bb0 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(54, 96, 146, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(54, 96, 146, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .competitor-analysis {
+            background: linear-gradient(135deg, #ffc000 0%, #ffb000 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .expense-item:last-child {
+            border-bottom: none;
+        }
+
+        .expense-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .expense-value {
+            font-weight: 700;
+            color: #366092;
+        }
+
+        .optimization-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #00b050;
+        }
+
+        .optimization-title {
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 5px;
+        }
+
+        .optimization-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00b050;
+        }
+
+        .toggle-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e7f3ff;
+            border-radius: 8px;
+            border-left: 4px solid #366092;
+        }
+
+        .recommendations {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #ffc107;
+            margin-top: 20px;
+        }
+
+        .recommendations h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendations li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ffeeba;
+        }
+
+        .recommendations li:last-child {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 Калькулятор импорта из Европы</h1>
+            <p>Рассчитайте оптимальную цену продажи и реальную прибыль</p>
+        </div>
+
+        <div class="content">
+            <!-- ЛЕВАЯ КОЛОНКА - ВХОДНЫЕ ДАННЫЕ -->
+            <div>
+                <!-- 1. Закупка -->
+                <div class="section">
+                    <div class="section-title">1. Закупка в Европе</div>
+                    <div class="input-group">
+                        <label>Закупка товара (€)</label>
+                        <input type="number" id="zakupka" value="0" step="0.01">
+                        <div class="input-hint">Цена у европейского поставщика</div>
+                    </div>
+                    <div class="input-group">
+                        <label>Доставка до 2 кг (€)</label>
+                        <input type="number" id="dostavka2kg" value="35" step="0.01">
+                        <div class="input-hint">35€ стандартно, или 0 если больше 2кг</div>
+                    </div>
+                    <div class="input-group">
+                        <label>Доставка по инвойсу (€)</label>
+                        <input type="number" id="dostavkaInvoice" value="0" step="0.01">
+                        <div class="input-hint">Если вес > 2 кг</div>
+                    </div>
+                </div>
+
+                <!-- 2. Способ перевода -->
+                <div class="section">
+                    <div class="section-title">2. Способ перевода</div>
+                    <div class="input-group">
+                        <label>Выберите способ</label>
+                        <select id="sposob">
+                            <option value="1">Наличка через ИП</option>
+                            <option value="2">Крипта (EUR→USDT→RUB)</option>
+                        </select>
+                    </div>
+
+                    <div id="nalichkaBlock">
+                        <div class="input-group">
+                            <label>Курс EUR/RUB</label>
+                            <input type="number" id="kursNalichka" value="105" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Комиссия ИП (%)</label>
+                            <input type="number" id="komisIP" value="10" step="0.1">
+                            <div class="input-hint">Обычно 10%</div>
+                        </div>
+                    </div>
+
+                    <div id="kriptaBlock" style="display:none;">
+                        <div class="input-group">
+                            <label>Курс EUR/USDT</label>
+                            <input type="number" id="kursEurUsdt" value="1.19" step="0.0001">
+                        </div>
+                        <div class="input-group">
+                            <label>Курс USDT/RUB</label>
+                            <input type="number" id="kursUsdtRub" value="83.43" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Комиссия (%)</label>
+                            <input type="number" id="komisKripta" value="2" step="0.1">
+                        </div>
+                        <div class="input-group">
+                            <label>Комиссия агента (₽)</label>
+                            <input type="number" id="komisAgent" value="19908.72" step="0.01">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Логистика и документы -->
+                <div class="section">
+                    <div class="section-title">3. Логистика и документы</div>
+                    <div class="input-group">
+                        <label>Доставка по России (₽)</label>
+                        <input type="number" id="dostavkaRF" value="0" step="0.01">
+                        <div class="input-hint">Последняя миля</div>
+                    </div>
+                    <div class="input-group">
+                        <label>Стоимость покупки документов (%)</label>
+                        <input type="number" id="stoimostDocs" value="10" step="0.1">
+                        <div class="input-hint">Обычно 10%</div>
+                    </div>
+                    <div class="input-group">
+                        <label>Целевая официальная прибыль (%)</label>
+                        <input type="number" id="celProfit" value="3" step="0.1">
+                        <div class="input-hint">Для бухгалтерии, обычно 3%</div>
+                    </div>
+                </div>
+
+                <!-- 4. Желаемая прибыль -->
+                <div class="section">
+                    <div class="section-title">4. Желаемая прибыль</div>
+                    <div class="input-group">
+                        <label>Желаемая РЕАЛЬНАЯ прибыль (₽)</label>
+                        <input type="number" id="jelaemayaPribil" value="0" step="0.01">
+                        <div class="input-hint">Сколько хотите заработать на руках</div>
+                    </div>
+                </div>
+
+                <!-- 5. Конкуренты -->
+                <div class="section">
+                    <div class="section-title">5. Цены конкурентов</div>
+                    <div class="input-group">
+                        <label>Минимальная цена (₽)</label>
+                        <input type="number" id="konkurentMin" value="0" step="0.01">
+                    </div>
+                    <div class="input-group">
+                        <label>Максимальная цена (₽)</label>
+                        <input type="number" id="konkurentMax" value="0" step="0.01">
+                    </div>
+                </div>
+
+                <button class="btn" onclick="calculate()">🚀 РАССЧИТАТЬ ЦЕНУ</button>
+            </div>
+
+            <!-- ПРАВАЯ КОЛОНКА - РЕЗУЛЬТАТЫ -->
+            <div>
+                <!-- Главный результат -->
+                <div class="result-section">
+                    <div class="result-title">💰 ЦЕНА ПРОДАЖИ ДЛЯ КЛИЕНТА</div>
+                    <div class="result-value" id="resultPrice">0 ₽</div>
+                    <div class="result-subtitle">Выставить счет на эту сумму</div>
+                </div>
+
+                <!-- Анализ конкурентов -->
+                <div class="competitor-analysis" id="competitorBlock" style="display:none;">
+                    <h3 style="margin-bottom:15px;">📊 Анализ конкурентов</h3>
+                    <div style="font-size:18px; margin-bottom:10px;">
+                        Средняя цена: <span id="competitorAvg" style="font-weight:700;">0 ₽</span>
+                    </div>
+                    <div style="font-size:16px; margin-bottom:10px;">
+                        Разница: <span id="competitorDiff" style="font-weight:700;">0 ₽</span>
+                        (<span id="competitorDiffPercent">0%</span>)
+                    </div>
+                    <div id="competitorStatus"></div>
+                </div>
+
+                <!-- Структура расходов -->
+                <div class="section">
+                    <div class="section-title">📈 Структура расходов</div>
+                    <div id="expensesList"></div>
+                </div>
+
+                <!-- Сценарии оптимизации -->
+                <div class="section">
+                    <div class="section-title">💡 Сценарии оптимизации</div>
+                    <div id="optimizationList"></div>
+                    <div style="margin-top:20px; padding:15px; background:#e8f5e9; border-radius:8px;">
+                        <div style="font-weight:600; margin-bottom:5px;">Потенциал оптимизации:</div>
+                        <div style="font-size:28px; font-weight:700; color:#00b050;" id="totalOptimization">0 ₽</div>
+                        <div style="font-size:14px; margin-top:5px;">Прибыль может быть: <span style="font-weight:700;" id="maxProfit">0 ₽</span></div>
+                    </div>
+                </div>
+
+                <!-- Рекомендации -->
+                <div class="recommendations">
+                    <h3>💡 Рекомендации по оптимизации</h3>
+                    <ul id="recommendationsList"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Переключение блоков при выборе способа
+        document.getElementById('sposob').addEventListener('change', function() {
+            const sposob = this.value;
+            document.getElementById('nalichkaBlock').style.display = sposob === '1' ? 'block' : 'none';
+            document.getElementById('kriptaBlock').style.display = sposob === '2' ? 'block' : 'none';
+        });
+
+        function calculate() {
+            // Получаем входные данные
+            const zakupka = parseFloat(document.getElementById('zakupka').value) || 0;
+            const dostavka2kg = parseFloat(document.getElementById('dostavka2kg').value) || 0;
+            const dostavkaInvoice = parseFloat(document.getElementById('dostavkaInvoice').value) || 0;
+            const sposob = document.getElementById('sposob').value;
+            const dostavkaRF = parseFloat(document.getElementById('dostavkaRF').value) || 0;
+            const stoimostDocs = (parseFloat(document.getElementById('stoimostDocs').value) || 10) / 100;
+            const celProfit = (parseFloat(document.getElementById('celProfit').value) || 3) / 100;
+            const jelaemayaPribil = parseFloat(document.getElementById('jelaemayaPribil').value) || 0;
+            const konkurentMin = parseFloat(document.getElementById('konkurentMin').value) || 0;
+            const konkurentMax = parseFloat(document.getElementById('konkurentMax').value) || 0;
+
+            // Параметры способа перевода
+            let kurs, komisPerevod, komisAgent = 0;
+            if (sposob === '1') {
+                kurs = parseFloat(document.getElementById('kursNalichka').value) || 105;
+                komisPerevod = (parseFloat(document.getElementById('komisIP').value) || 10) / 100;
+            } else {
+                const kursEurUsdt = parseFloat(document.getElementById('kursEurUsdt').value) || 1.19;
+                const kursUsdtRub = parseFloat(document.getElementById('kursUsdtRub').value) || 83.43;
+                const komisKripta = (parseFloat(document.getElementById('komisKripta').value) || 2) / 100;
+                komisAgent = parseFloat(document.getElementById('komisAgent').value) || 19908.72;
+                kurs = kursEurUsdt * kursUsdtRub;
+                komisPerevod = komisKripta;
+            }
+
+            const nds = 0.20;
+            const nalogNaPribil = 0.20;
+
+            // Расчеты
+            const dostavkaEvropa = dostavka2kg + dostavkaInvoice;
+            const nujnoVEvrope = zakupka + dostavkaEvropa;
+            
+            // Расчет суммы к выводу
+            let kVivodu;
+            if (sposob === '1') {
+                const sKomisiej = nujnoVEvrope * (1 + komisPerevod);
+                const vRublyah = sKomisiej * kurs;
+                const komisIP = vRublyah * komisPerevod;
+                kVivodu = vRublyah + komisIP;
+            } else {
+                const sKomisiej = nujnoVEvrope * (1 + komisPerevod);
+                const vUsdt = sKomisiej * (kurs / ((1 + komisPerevod) * kurs));
+                const vRublyah = sKomisiej * kurs;
+                kVivodu = vRublyah + komisAgent;
+            }
+
+            const zakupkaRub = zakupka * kurs;
+            const dostavkaEvropaRub = dostavkaEvropa * kurs;
+            
+            // Прямые расходы
+            const pryamieRashodi = kVivodu + dostavkaRF;
+
+            // Формула обратного расчета
+            const viruchkaBezNDS = (jelaemayaPribil + pryamieRashodi) / (1 - stoimostDocs * (1 - celProfit) - celProfit * nalogNaPribil);
+            
+            const ndsSum = viruchkaBezNDS * nds;
+            const cenaProdaji = viruchkaBezNDS + ndsSum;
+
+            // Проверка расчетов
+            const perviyPrihod = zakupkaRub * 0.10;
+            const celevayaPribil = viruchkaBezNDS * celProfit;
+            const dopPrihod = viruchkaBezNDS - perviyPrihod - celevayaPribil;
+            const stoimostDokov = (perviyPrihod + dopPrihod) * stoimostDocs;
+            const nalogNaPribilSum = celevayaPribil * nalogNaPribil;
+
+            // Вывод главного результата
+            document.getElementById('resultPrice').textContent = cenaProdaji.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ₽';
+
+            // Анализ конкурентов
+            if (konkurentMin > 0 || konkurentMax > 0) {
+                const avgKonkurent = (konkurentMin + konkurentMax) / 2;
+                const diff = cenaProdaji - avgKonkurent;
+                const diffPercent = (diff / avgKonkurent * 100).toFixed(1);
+                
+                document.getElementById('competitorBlock').style.display = 'block';
+                document.getElementById('competitorAvg').textContent = avgKonkurent.toLocaleString('ru-RU', {minimumFractionDigits: 2}) + ' ₽';
+                document.getElementById('competitorDiff').textContent = diff.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ₽';
+                document.getElementById('competitorDiffPercent').textContent = (diff > 0 ? '+' : '') + diffPercent + '%';
+                
+                const status = diff > 0 ? 
+                    '<span class="status-badge status-danger">❌ МЫ ДОРОЖЕ</span>' :
+                    '<span class="status-badge status-success">✅ МЫ ДЕШЕВЛЕ</span>';
+                document.getElementById('competitorStatus').innerHTML = status;
+            } else {
+                document.getElementById('competitorBlock').style.display = 'none';
+            }
+
+            // Структура расходов
+            const rashodi = [
+                {label: 'Закупка', value: zakupkaRub, percent: zakupkaRub / cenaProdaji * 100},
+                {label: 'Доставка Европа', value: dostavkaEvropaRub, percent: dostavkaEvropaRub / cenaProdaji * 100},
+                {label: 'Комиссия перевода', value: kVivodu - zakupkaRub - dostavkaEvropaRub, percent: (kVivodu - zakupkaRub - dostavkaEvropaRub) / cenaProdaji * 100},
+                {label: 'Доставка РФ', value: dostavkaRF, percent: dostavkaRF / cenaProdaji * 100},
+                {label: 'Покупка документов', value: stoimostDokov, percent: stoimostDokov / cenaProdaji * 100},
+                {label: 'НДС', value: ndsSum, percent: ndsSum / cenaProdaji * 100},
+                {label: 'Налог на прибыль', value: nalogNaPribilSum, percent: nalogNaPribilSum / cenaProdaji * 100},
+            ];
+
+            let expensesHTML = '';
+            rashodi.forEach(r => {
+                expensesHTML += `
+                    <div class="expense-item">
+                        <span class="expense-label">${r.label}</span>
+                        <span class="expense-value">${r.value.toLocaleString('ru-RU', {minimumFractionDigits: 2})} ₽ (${r.percent.toFixed(1)}%)</span>
+                    </div>
+                `;
+            });
+            
+            const totalRashodi = rashodi.reduce((sum, r) => sum + r.value, 0);
+            expensesHTML += `
+                <div class="expense-item" style="border-top: 3px solid #366092; margin-top: 10px; padding-top: 15px;">
+                    <span class="expense-label" style="font-size: 16px;">ИТОГО расходы</span>
+                    <span class="expense-value" style="font-size: 16px;">${totalRashodi.toLocaleString('ru-RU', {minimumFractionDigits: 2})} ₽ (${(totalRashodi / cenaProdaji * 100).toFixed(1)}%)</span>
+                </div>
+                <div class="expense-item">
+                    <span class="expense-label" style="color: #00b050; font-size: 16px;">Прибыль</span>
+                    <span class="expense-value" style="color: #00b050; font-size: 16px;">${jelaemayaPribil.toLocaleString('ru-RU', {minimumFractionDigits: 2})} ₽ (${(jelaemayaPribil / cenaProdaji * 100).toFixed(1)}%)</span>
+                </div>
+            `;
+            document.getElementById('expensesList').innerHTML = expensesHTML;
+
+            // Сценарии оптимизации
+            const scenarios = [];
+            
+            if (sposob === '1' && komisPerevod > 0.08) {
+                const ekonomiya = (komisPerevod - 0.08) * zakupkaRub * (1 + komisPerevod);
+                scenarios.push({title: 'Снизить комиссию ИП до 8%', value: ekonomiya});
+            }
+
+            const ekonomiyaZakupka = 50 * kurs * (1 + komisPerevod + stoimostDocs);
+            scenarios.push({title: 'Найти поставщика дешевле на 50€', value: ekonomiyaZakupka});
+
+            if (stoimostDocs > 0.08) {
+                const ekonomiyaDocs = (stoimostDocs - 0.08) * viruchkaBezNDS * (1 - celProfit);
+                scenarios.push({title: 'Покупка документов под 8%', value: ekonomiyaDocs});
+            }
+
+            if (dostavkaRF > 0) {
+                const ekonomiyaDostavka = dostavkaRF * 0.30;
+                scenarios.push({title: 'Оптимизировать доставку РФ (-30%)', value: ekonomiyaDostavka});
+            }
+
+            if (celProfit > 0.02) {
+                const ekonomiyaProfit = (celProfit - 0.02) * viruchkaBezNDS * stoimostDocs;
+                scenarios.push({title: 'Снизить офиц. прибыль до 2%', value: ekonomiyaProfit});
+            }
+
+            let optimizationHTML = '';
+            let totalOptimization = 0;
+            scenarios.forEach(s => {
+                totalOptimization += s.value;
+                optimizationHTML += `
+                    <div class="optimization-item">
+                        <div class="optimization-title">${s.title}</div>
+                        <div class="optimization-value">+${s.value.toLocaleString('ru-RU', {minimumFractionDigits: 2})} ₽</div>
+                    </div>
+                `;
+            });
+            document.getElementById('optimizationList').innerHTML = optimizationHTML;
+            document.getElementById('totalOptimization').textContent = totalOptimization.toLocaleString('ru-RU', {minimumFractionDigits: 2}) + ' ₽';
+            document.getElementById('maxProfit').textContent = (jelaemayaPribil + totalOptimization).toLocaleString('ru-RU', {minimumFractionDigits: 2}) + ' ₽';
+
+            // Рекомендации
+            const recommendations = [
+                `<strong>Комиссия вывода</strong> - самая большая статья расходов (${((kVivodu - zakupkaRub - dostavkaEvropaRub) / cenaProdaji * 100).toFixed(1)}%). ${sposob === '1' ? 'Рассмотрите переход на крипту для сумм от 10 000€' : 'Хороший выбор для больших сумм'}.`,
+                `<strong>Покупка документов</strong> составляет ${(stoimostDokov / cenaProdaji * 100).toFixed(1)}% от выручки. Поиск поставщиков документов с меньшей комиссией (8% вместо 10%) даст экономию ${((stoimostDocs - 0.08) * viruchkaBezNDS * (1 - celProfit)).toLocaleString('ru-RU', {minimumFractionDigits: 0})} ₽.`,
+                `<strong>Закупка</strong> - ${(zakupkaRub / cenaProdaji * 100).toFixed(1)}% расходов. Прямой контракт с производителем или оптовые скидки могут снизить эту статью на 10-15%.`,
+                `<strong>Маржинальность</strong> текущая: ${(jelaemayaPribil / cenaProdaji * 100).toFixed(1)}%. ${jelaemayaPribil / cenaProdaji < 0.15 ? 'Низкая рентабельность - риски высоки' : 'Хорошая рентабельность'}.`,
+            ];
+
+            let recommendationsHTML = '';
+            recommendations.forEach(r => {
+                recommendationsHTML += `<li>${r}</li>`;
+            });
+            document.getElementById('recommendationsList').innerHTML = recommendationsHTML;
+        }
+
+        // Автоматический расчет при загрузке
+        window.addEventListener('load', calculate);
+    </script>
+</body>
+</html>

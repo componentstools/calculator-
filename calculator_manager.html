@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор менеджера | Components Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #f5f8fa 0%, #e8f4f8 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 20px rgba(0, 92, 122, 0.08);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #005c7a 0%, #12b2e7 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid #e8ecef;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #005c7a;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #12b2e7;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e8ecef;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #12b2e7;
+            box-shadow: 0 0 0 3px rgba(18, 178, 231, 0.1);
+        }
+
+        .input-hint {
+            font-size: 12px;
+            color: #7d8d9f;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #12b2e7;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .search-btn:hover {
+            background: #0fa0d3;
+        }
+
+        .part-info {
+            background: #f8fcff;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #12b2e7;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .part-info.show {
+            display: block;
+        }
+
+        .part-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e8ecef;
+        }
+
+        .part-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .part-info-label {
+            font-weight: 600;
+            color: #555;
+            font-size: 13px;
+        }
+
+        .part-info-value {
+            font-weight: 700;
+            color: #005c7a;
+            font-size: 13px;
+        }
+
+        .result-section {
+            background: linear-gradient(135deg, #12b2e7 0%, #00d4ff 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(18, 178, 231, 0.25);
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-value {
+            font-size: 48px;
+            font-weight: 800;
+            margin: 10px 0;
+            letter-spacing: -1px;
+        }
+
+        .result-subtitle {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        .result-breakdown {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .breakdown-label {
+            opacity: 0.9;
+        }
+
+        .breakdown-value {
+            font-weight: 700;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #005c7a 0%, #12b2e7 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(18, 178, 231, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(18, 178, 231, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .profit-slider-container {
+            margin-top: 10px;
+        }
+
+        .profit-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+            background: linear-gradient(to right, #12b2e7 0%, #12b2e7 25%, #e8ecef 25%, #e8ecef 100%);
+        }
+
+        .profit-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #12b2e7;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(18, 178, 231, 0.4);
+        }
+
+        .profit-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #12b2e7;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(18, 178, 231, 0.4);
+            border: none;
+        }
+
+        .profit-value-display {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: #12b2e7;
+            margin-top: 10px;
+        }
+
+        .competitor-info {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin-top: 15px;
+        }
+
+        .competitor-title {
+            font-weight: 700;
+            color: #f57c00;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #12b2e7;
+            font-weight: 600;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: 600;
+            border-left: 4px solid #c62828;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #005c7a;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #005c7a 0%, #12b2e7 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Экран авторизации -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-title">🔐 Вход в систему</div>
+        <div class="input-group">
+            <label>Логин</label>
+            <input type="text" id="loginUsername" placeholder="Введите логин">
+        </div>
+        <div class="input-group">
+            <label>Пароль</label>
+            <input type="password" id="loginPassword" placeholder="Введите пароль">
+        </div>
+        <button class="login-btn" onclick="login()">Войти</button>
+        <div id="loginError" class="error" style="display: none;"></div>
+    </div>
+
+    <!-- Главный калькулятор -->
+    <div id="calculatorScreen" class="container" style="display: none;">
+        <div class="header">
+            <h1>💼 КАЛЬКУЛЯТОР МЕНЕДЖЕРА</h1>
+            <p>Быстрый расчет цены продажи для клиента</p>
+            <div class="user-info">
+                <div class="user-name">👤 <span id="userName">Менеджер</span></div>
+                <button class="logout-btn" onclick="logout()">Выйти</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Поиск детали -->
+            <div class="section">
+                <div class="section-title">1. Поиск детали</div>
+                <div class="input-group">
+                    <label>Артикул (MPN)</label>
+                    <div class="search-container">
+                        <input type="text" id="mpnInput" placeholder="Введите артикул, например: ATmega328P">
+                        <button class="search-btn" onclick="searchPart()">🔍 Найти</button>
+                    </div>
+                    <div class="input-hint">Система автоматически найдет цену и наличие</div>
+                </div>
+
+                <div id="partInfo" class="part-info">
+                    <div class="part-info-item">
+                        <span class="part-info-label">Производитель:</span>
+                        <span class="part-info-value" id="partManufacturer">-</span>
+                    </div>
+                    <div class="part-info-item">
+                        <span class="part-info-label">Описание:</span>
+                        <span class="part-info-value" id="partDescription">-</span>
+                    </div>
+                    <div class="part-info-item">
+                        <span class="part-info-label">Цена закупки:</span>
+                        <span class="part-info-value" id="partPrice">-</span>
+                    </div>
+                    <div class="part-info-item">
+                        <span class="part-info-label">Наличие:</span>
+                        <span class="part-info-value" id="partAvailability">-</span>
+                    </div>
+                    <div class="part-info-item">
+                        <span class="part-info-label">Срок поставки:</span>
+                        <span class="part-info-value" id="partDelivery">-</span>
+                    </div>
+                </div>
+
+                <div id="searchLoading" class="loading" style="display: none;">
+                    ⏳ Поиск детали...
+                </div>
+                <div id="searchError" class="error" style="display: none;"></div>
+            </div>
+
+            <!-- Ручной ввод цены (если не найдено) -->
+            <div class="section">
+                <div class="section-title">2. Цена закупки</div>
+                <div class="input-group">
+                    <label>Цена товара в Европе (€)</label>
+                    <input type="number" id="purchasePrice" value="0" step="0.01" min="0">
+                    <div class="input-hint">Если деталь не найдена автоматически - введите вручную</div>
+                </div>
+            </div>
+
+            <!-- Конкуренты -->
+            <div class="section">
+                <div class="section-title">3. Цены конкурентов</div>
+                <div class="input-group">
+                    <label>Минимальная цена (₽)</label>
+                    <input type="number" id="competitorMin" value="0" step="0.01" min="0">
+                </div>
+                <div class="input-group">
+                    <label>Максимальная цена (₽)</label>
+                    <input type="number" id="competitorMax" value="0" step="0.01" min="0">
+                </div>
+                <div class="input-hint">Укажите диапазон цен конкурентов для анализа</div>
+            </div>
+
+            <!-- Желаемая прибыль -->
+            <div class="section">
+                <div class="section-title">4. Желаемая прибыль</div>
+                <div class="input-group">
+                    <label>Прибыль поверх безубыточности (%)</label>
+                    <div class="profit-slider-container">
+                        <input type="range" id="profitPercent" class="profit-slider" 
+                               min="5" max="50" step="1" value="25" 
+                               oninput="updateProfitDisplay()">
+                        <div class="profit-value-display" id="profitDisplay">25%</div>
+                    </div>
+                    <div class="input-hint">Рекомендуется: 20-30% для стабильной прибыли</div>
+                </div>
+            </div>
+
+            <!-- Кнопка расчета -->
+            <button class="btn" onclick="calculate()" id="calculateBtn">
+                🚀 РАССЧИТАТЬ ЦЕНУ ДЛЯ КЛИЕНТА
+            </button>
+
+            <!-- Результат -->
+            <div id="resultSection" style="display: none; margin-top: 30px;">
+                <div class="result-section">
+                    <div class="result-label">💰 ЦЕНА ДЛЯ ВЫСТАВЛЕНИЯ СЧЕТА</div>
+                    <div class="result-value" id="resultPrice">0 ₽</div>
+                    <div class="result-subtitle">Выставите клиенту счет на эту сумму</div>
+
+                    <div class="result-breakdown">
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Точка безубыточности:</span>
+                            <span class="breakdown-value" id="breakeven">0 ₽</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Ваша прибыль:</span>
+                            <span class="breakdown-value" id="profit">0 ₽</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Рентабельность:</span>
+                            <span class="breakdown-value" id="margin">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="competitorSection" class="competitor-info" style="display: none;">
+                    <div class="competitor-title">📊 Анализ конкурентов</div>
+                    <div class="part-info-item">
+                        <span class="part-info-label">Средняя цена рынка:</span>
+                        <span class="part-info-value" id="competitorAvg">0 ₽</span>
+                    </div>
+                    <div class="part-info-item">
+                        <span class="part-info-label">Наша позиция:</span>
+                        <span class="part-info-value" id="competitorStatus">-</span>
+                    </div>
+                    <div class="part-info-item">
+                        <span class="part-info-label">Разница:</span>
+                        <span class="part-info-value" id="competitorDiff">0 ₽</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API базовый URL
+        const API_BASE = '/api'; // Измените на ваш URL
+
+        let currentUser = null;
+        let currentProfile = null;
+
+        // Инициализация
+        window.addEventListener('load', function() {
+            checkAuth();
+        });
+
+        // Проверка авторизации
+        function checkAuth() {
+            const token = localStorage.getItem('auth_token');
+            const username = localStorage.getItem('username');
+            
+            if (token && username) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('calculatorScreen').style.display = 'block';
+                document.getElementById('userName').textContent = username;
+                loadProfile();
+            }
+        }
+
+        // Авторизация
+        async function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!username || !password) {
+                showError('loginError', 'Заполните все поля');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, password})
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.setItem('auth_token', data.token);
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('user_id', data.user_id);
+                    
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('calculatorScreen').style.display = 'block';
+                    document.getElementById('userName').textContent = username;
+                    loadProfile();
+                } else {
+                    showError('loginError', data.error || 'Неверный логин или пароль');
+                }
+            } catch (error) {
+                showError('loginError', 'Ошибка подключения к серверу');
+            }
+        }
+
+        // Выход
+        function logout() {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('user_id');
+            location.reload();
+        }
+
+        // Загрузка профиля расходов
+        async function loadProfile() {
+            try {
+                const response = await fetch(`${API_BASE}/profile/active`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentProfile = data.data;
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки профиля:', error);
+            }
+        }
+
+        // Поиск детали
+        async function searchPart() {
+            const mpn = document.getElementById('mpnInput').value.trim();
+            
+            if (!mpn) {
+                showError('searchError', 'Введите артикул');
+                return;
+            }
+            
+            document.getElementById('searchLoading').style.display = 'block';
+            document.getElementById('searchError').style.display = 'none';
+            document.getElementById('partInfo').classList.remove('show');
+            
+            try {
+                // Ищем через Nexar/Octopart
+                const response = await fetch(`${API_BASE}/octopart/search?mpn=${encodeURIComponent(mpn)}`);
+                const data = await response.json();
+                
+                document.getElementById('searchLoading').style.display = 'none';
+                
+                if (data.success && data.data.found) {
+                    const part = data.data;
+                    
+                    document.getElementById('partManufacturer').textContent = part.manufacturer;
+                    document.getElementById('partDescription').textContent = part.description;
+                    document.getElementById('partPrice').textContent = `${part.minPrice} ${part.currency}`;
+                    document.getElementById('partAvailability').textContent = part.availability > 0 ? 
+                        `✅ В наличии: ${part.availability} шт` : '❌ Нет в наличии';
+                    document.getElementById('partDelivery').textContent = `${part.deliveryDays} дней`;
+                    
+                    document.getElementById('partInfo').classList.add('show');
+                    document.getElementById('purchasePrice').value = part.minPrice || 0;
+                } else {
+                    showError('searchError', 'Деталь не найдена. Введите цену вручную.');
+                }
+            } catch (error) {
+                document.getElementById('searchLoading').style.display = 'none';
+                showError('searchError', 'Ошибка поиска. Попробуйте еще раз.');
+            }
+        }
+
+        // Обновление отображения процента прибыли
+        function updateProfitDisplay() {
+            const percent = document.getElementById('profitPercent').value;
+            document.getElementById('profitDisplay').textContent = percent + '%';
+            
+            // Обновляем градиент слайдера
+            const slider = document.getElementById('profitPercent');
+            const percentage = ((percent - 5) / 45) * 100;
+            slider.style.background = `linear-gradient(to right, #12b2e7 0%, #12b2e7 ${percentage}%, #e8ecef ${percentage}%, #e8ecef 100%)`;
+        }
+
+        // Расчет цены
+        async function calculate() {
+            const purchasePrice = parseFloat(document.getElementById('purchasePrice').value) || 0;
+            const profitPercent = parseFloat(document.getElementById('profitPercent').value) || 25;
+            const competitorMin = parseFloat(document.getElementById('competitorMin').value) || 0;
+            const competitorMax = parseFloat(document.getElementById('competitorMax').value) || 0;
+            
+            if (purchasePrice <= 0) {
+                alert('Укажите цену закупки');
+                return;
+            }
+            
+            if (!currentProfile) {
+                alert('Ошибка загрузки настроек');
+                return;
+            }
+            
+            document.getElementById('calculateBtn').disabled = true;
+            document.getElementById('calculateBtn').textContent = '⏳ РАСЧЕТ...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/calculate`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        purchasePriceEur: purchasePrice,
+                        desiredProfitPercent: profitPercent,
+                        competitorMin: competitorMin,
+                        competitorMax: competitorMax
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const result = data.data;
+                    
+                    // Отображаем результат
+                    document.getElementById('resultPrice').textContent = 
+                        result.price.withVat.toLocaleString('ru-RU', {minimumFractionDigits: 2}) + ' ₽';
+                    
+                    document.getElementById('breakeven').textContent = 
+                        result.price.breakeven.toLocaleString('ru-RU', {minimumFractionDigits: 2}) + ' ₽';
+                    
+                    document.getElementById('profit').textContent = 
+                        result.profit.amount.toLocaleString('ru-RU', {minimumFractionDigits: 2}) + ' ₽';
+                    
+                    document.getElementById('margin').textContent = 
+                        result.profit.percent.toFixed(1) + '%';
+                    
+                    document.getElementById('resultSection').style.display = 'block';
+                    
+                    // Анализ конкурентов
+                    if (competitorMin > 0 || competitorMax > 0) {
+                        document.getElementById('competitorSection').style.display = 'block';
+                        document.getElementById('competitorAvg').textContent = 
+                            result.competitors.average.toLocaleString('ru-RU', {minimumFractionDigits: 2}) + ' ₽';
+                        
+                        const status = result.competitors.cheaper ? 
+                            '✅ Мы дешевле' : '❌ Мы дороже';
+                        document.getElementById('competitorStatus').textContent = status;
+                        
+                        const diff = result.competitors.difference;
+                        const diffPercent = result.competitors.differencePercent;
+                        
+                        // Защита от Infinity
+                        const displayPercent = (diffPercent === Infinity || diffPercent === -Infinity || isNaN(diffPercent)) 
+                            ? '0.0' 
+                            : diffPercent.toFixed(1);
+                        
+                        const diffText = (diff > 0 ? '+' : '') + 
+                            diff.toLocaleString('ru-RU', {minimumFractionDigits: 2}) + ' ₽ (' +
+                            (diff > 0 ? '+' : '') + displayPercent + '%)';
+                        document.getElementById('competitorDiff').textContent = diffText;
+                    } else {
+                        document.getElementById('competitorSection').style.display = 'none';
+                    }
+                    
+                    // Сохраняем расчет в БД
+                    saveCalculation(purchasePrice, result);
+                    
+                } else {
+                    alert('Ошибка расчета: ' + (data.error || 'Неизвестная ошибка'));
+                }
+            } catch (error) {
+                alert('Ошибка соединения с сервером');
+            } finally {
+                document.getElementById('calculateBtn').disabled = false;
+                document.getElementById('calculateBtn').textContent = '🚀 РАССЧИТАТЬ ЦЕНУ ДЛЯ КЛИЕНТА';
+            }
+        }
+
+        // Сохранение расчета в БД
+        async function saveCalculation(purchasePrice, result) {
+            try {
+                const mpn = document.getElementById('mpnInput').value.trim();
+                const userId = localStorage.getItem('user_id');
+                
+                await fetch(`${API_BASE}/calculation/save`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        profile_id: currentProfile.id,
+                        user_id: userId,
+                        article_number: mpn,
+                        purchase_price_eur: purchasePrice,
+                        desired_profit_percent: parseFloat(document.getElementById('profitPercent').value),
+                        calculated_price_with_vat: result.price.withVat,
+                        calculated_price_without_vat: result.price.withoutVat,
+                        breakeven_point: result.price.breakeven,
+                        margin_percent: result.profit.percent,
+                        calculation_type: 'manager'
+                    })
+                });
+            } catch (error) {
+                console.error('Ошибка сохранения расчета:', error);
+            }
+        }
+
+        // Показать ошибку
+        function showError(elementId, message) {
+            const errorEl = document.getElementById(elementId);
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            setTimeout(() => {
+                errorEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // Инициализация слайдера прибыли
+        updateProfitDisplay();
+    </script>
+</body>
+</html>
